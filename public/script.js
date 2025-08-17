@@ -116,7 +116,7 @@ async function uploadFile() {
     convertBtn.disabled = true;
     
     try {
-        const response = await fetch('/api/upload', {
+        const response = await fetch('https://mediashare.zaroffc.xyz/api/upload', {
             method: 'POST',
             body: formData
         });
