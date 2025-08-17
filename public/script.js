@@ -133,7 +133,7 @@ async function uploadFile() {
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Upload failed. Please try again.');
+        alert('Upload failed. Please try again.\n Error: ' + error);
     } finally {
         // Reset button state
         convertBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Generate Shareable Link';
