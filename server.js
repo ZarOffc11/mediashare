@@ -30,7 +30,7 @@ const upload = multer({
 });
 
 // Serve static files
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Handle root path
 app.get('/', (req, res) => {
