@@ -32,6 +32,11 @@ const upload = multer({
 // Serve static files
 app.use(express.static('public'));
 
+// Handle root path
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // API Endpoints
 app.post('/api/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
