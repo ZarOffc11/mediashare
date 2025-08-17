@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaShare | Convert Media to Links</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-share-alt"></i> MediaShare</h1>
+            <p class="subtitle">Convert your media to shareable links instantly</p>
+        </header>
+        
+        <div class="card">
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Upload Your File</h3>
+                <p>Drag & drop or click to browse</p>
+                <input type="file" id="fileInput">
+            </div>
+            
+            <div class="file-preview" id="filePreview">
+                <div id="previewContent"></div>
+                <div class="file-info" id="fileInfo"></div>
+            </div>
+            
+            <button id="convertBtn" class="btn" disabled>
+                <i class="fas fa-exchange-alt"></i> Generate Shareable Link
+            </button>
+            
+            <div class="result-container" id="mediaResult">
+                <div class="result-title">
+                    <i class="fas fa-link"></i> Your Shareable Link:
+                </div>
+                <div class="result-box">
+                    <div class="result-url" id="mediaLink"></div>
+                    <button class="copy-btn" id="copyMediaLink">
+                        <i class="fas fa-copy"></i>  Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="history">
+            <h3><i class="fas fa-history"></i> Recent Uploads</h3>
+            <div id="mediaHistory"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

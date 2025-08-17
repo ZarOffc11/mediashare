@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 IP Address Checker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #1e1e1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent-color: #4a6fa5;
+            --border-color: #333333;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.6;
+        }
+        
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+        
+        h1 {
+            margin: 0 0 10px;
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .subtitle {
+            margin: 0 0 25px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            gap: 15px 20px;
+        }
+        
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            word-break: break-all;
+        }
+        
+        #ip-address {
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            margin-left: 8px;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .copy-btn:hover {
+            color: var(--accent-color);
+        }
+        
+        .loading {
+            display: inline-flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid var(--accent-color);
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-network-wired"></i> IP Address Checker</h1>
+        <p class="subtitle"><i class="fas fa-key"></i> Simple tool to check your public IP address</p>
+        
+        <div class="info-grid">
+            <div class="info-label"><i class="fas fa-address-card"></i> Public IP:</div>
+            <div class="info-value" id="ip-address">
+                <span class="loading">
+                    <span class="spinner"></span>
+                    <span>Detecting...</span>
+                </span>
+            </div>
+            
+            <div class="info-label"><i class="fas fa-server"></i> ISP:</div>
+            <div class="info-value" id="isp">-</div>
+            
+            <div class="info-label"><i class="fas fa-map-marker-alt"></i> Location:</div>
+            <div class="info-value" id="location">-</div>
+            
+            <div class="info-label"><i class="fas fa-city"></i> City/Region:</div>
+            <div class="info-value" id="city">-</div>
+            
+            <div class="info-label"><i class="fas fa-flag"></i> Country:</div>
+            <div class="info-value" id="country">-</div>
+        </div>
+        
+        <div class="footer">
+            <i class="fas fa-info-circle"></i> Your IP address is visible to all websites you visit
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk copy teks
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copy-btn');
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="far fa-copy"></i>';
+                    }, 2000);
+                }
+            });
+        }
+        
+        // Fungsi utama untuk mendapatkan informasi IP
+        async function getIP() {
+            try {
+                // Dapatkan alamat IP
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                
+                // Tampilkan IP
+                document.getElementById('ip-address').innerHTML = 
+                    ipData.ip + 
+                    '<button class="copy-btn" id="copy-btn" onclick="copyToClipboard(\'' + ipData.ip + '\')">' +
+                    '<i class="far fa-copy"></i></button>';
+                
+                // Dapatkan info lokasi
+                const locationResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+                const locationData = await locationResponse.json();
+                
+                if (!locationData.error) {
+                    document.getElementById('isp').textContent = locationData.org || '-';
+                    document.getElementById('location').textContent = 
+                        `${locationData.latitude || '-'}, ${locationData.longitude || '-'}`;
+                    document.getElementById('city').textContent = 
+                        `${locationData.city || '-'}${locationData.region ? `, ${locationData.region}` : ''}`;
+                    document.getElementById('country').textContent = 
+                        `${locationData.country_name || '-'} (${locationData.country_code || '-'})`;
+                } else {
+                    throw new Error('Location data not available');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('ip-address').innerHTML = 
+                    '<span style="color: #ff6b6b">Failed to detect IP</span>';
+                
+                document.getElementById('isp').textContent = 'Error';
+                document.getElementById('location').textContent = 'Error';
+                document.getElementById('city').textContent = 'Error';
+                document.getElementById('country').textContent = 'Error';
+            }
+        }
+        
+        // Jalankan saat halaman dimuat
+        window.onload = getIP;
+    </script>
+</body>
+</html>
